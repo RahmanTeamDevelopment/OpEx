@@ -1,25 +1,27 @@
 
+### This is a template of the configuration file for CAVA v1.2.0 ###
+
 # Input file format
 # Possible values: VCF or TXT | Optional: yes | Default value: VCF
 @inputformat = VCF
 
 # Output file format
-# Possible values: VCF or CSV | Optional: yes | Default value: VCF
+# Possible values: VCF or TSV | Optional: yes | Default value: VCF
 @outputformat =  VCF
 
-# Name of reference genome file
+# Absolute path to reference genome file
 # Possible values: string | Optional: no
-@reference = human_g1k_v37.fasta 
+@reference = absolute/path/to/reference/genome
 
-# Name of Ensembl transcript database file
-# Possible values: string | Optional: yes (if not given, no transcript-based annotations are reported)
-@ensembl = exome_65_GRCh37.gz
+# Absolute path to Ensembl transcript database file
+# Possible values: string | Optional: yes (if not specified, default transcript database will be used)
+@ensembl = absolute/path/to/transcript/database
 
-# Name of dbSNP database file. 
-# Possible values: string | Optional: yes (if not given, no SNP-based annotations are reported)
-@dbsnp = dbSNP138.gz
+# Absolute path to dbSNP database file
+# Possible values: string | Optional: yes
+@dbsnp = absolute/path/to/dbsnp/database
 
-# Are variants with neither transcript nor dbSNP annotations to be included in the output?
+# Are variants with neither transcript nor dbSNP annotation to be included in the output?
 # Possible values: TRUE or FALSE | Optional: yes | Default value: TRUE
 @nonannot = TRUE
 
@@ -28,7 +30,7 @@
 @filter = FALSE
 
 # Types of variants to be annotated and outputted
-# Possible values: ALL, SNP, INDEL, INSERTION, DELETION or COMPLEX | Optional: yes | Default value: ALL
+# Possible values: ALL, SUBSTITUTION, INDEL, INSERTION, DELETION or COMPLEX | Optional: yes | Default value: ALL
 @type = ALL
 
 # Name of compressed BED file specifying genomic regions variant annotation is restricted to
@@ -47,14 +49,14 @@
 
 # Name of file providing a list of the dbSNP identifiers variant annotation is restricted to
 # Note: dbSNP identifiers need to be given on separate lines in the file
-# Possible values: string | Optional: yes 
+# Possible values: string | Optional: yes  
 @snplist = .
 
 # Is a log file to be written?
 # Possible values: TRUE or FALSE | Optional: yes | Default value: FALSE
 @logfile = FALSE
 
-# Which ontology is used for reporting functional class assignment?
+# Which ontology is used for reporting consequence type?
 # Possible values: CLASS, SO or BOTH | Optional: yes | Default value: BOTH
 @ontology = BOTH
 
@@ -64,8 +66,8 @@
 # Default value: SG,ESS,FS | SS5,IM,SL,EE,IF,NSY | SY,SS,INT,5PU,3PU
 @impactdef = SG,ESS,FS | SS5,IM,SL,EE,IF,NSY | SY,SS,INT,5PU,3PU
 
-# Are alternative CSN and CLASS annotations outputted?
-# If TRUE, the ALTCSN and ALTCLASS/ALTSO annotation flags are reported instead of the ALTANN flag
+# Are alternative annotations outputted?
+# If TRUE, the ALTANN and ALTCLASS/ALTSO annotation flags are reported instead of the ALTFLAG flag
 # Possible values: TRUE or FALSE | Optional: yes | Default value: TRUE
 @givealt = TRUE
 
@@ -73,3 +75,6 @@
 # Possible values: integer >= 6 | Optional: yes | Default value: 8
 @ssrange = 8
 
+# Is the prefix CAVA_ added to annotation flag names in VCF output?
+# Possible values: TRUE or FALSE | Optional: yes | Default value: FALSE
+@prefix = FALSE
