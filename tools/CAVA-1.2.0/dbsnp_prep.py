@@ -21,7 +21,7 @@ if not os.path.isfile(os.path.dirname(os.path.realpath(__file__))+"/pysamdir/pys
     quit()
 
 # Pysam import
-sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/pysamdir')
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/../../pysamdir')
 import pysam
 
 
