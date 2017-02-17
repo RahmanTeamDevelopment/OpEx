@@ -65,3 +65,7 @@
 # Possible values: integer >= 6 | Optional: yes | Default value: 8
 @ssrange = 8
 
+# Is the prefix CAVA_ added to annotation flag names in VCF output?
+# Possible values: TRUE or FALSE | Optional: yes | Default value: FALSE
+@prefix = FALSE
+
