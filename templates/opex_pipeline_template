@@ -62,7 +62,7 @@ python $opexdir/tools/Platypus-0.1.5/Platypus.py callVariants --bamFiles=@NAME_p
 # CAVA
 message "Variant annotation"
 checkFiles @NAME_calls.vcf
-python $opexdir/tools/cava-v1.1.1/cava.py -i @NAME_calls.vcf -c @CAVA_CONFIG -o @NAME_annotated_calls @MORECAVA
+python $opexdir/tools/CAVA-v1.2.0/cava.py -i @NAME_calls.vcf -c @CAVA_CONFIG -o @NAME_annotated_calls @MORECAVA
 
 # Creating output txt file
 message "Creating output txt file"
