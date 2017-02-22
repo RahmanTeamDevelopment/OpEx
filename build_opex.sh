@@ -35,12 +35,6 @@ tar zxvf Platypus_0.1.5.tgz
 mv PlatypusRelease/ Platypus-0.1.5
 rm Platypus_0.1.5.tgz; cd ..; echo
 
-# Download transcript database
-message "Downloading transcript database"
-wget http://www.well.ox.ac.uk/bioinformatics/Software/default_transcripts.zip
-unzip default_transcripts.zip
-rm default_transcripts.zip; echo
-
 # Build BWA
 message "Building BWA"
 cd tools/bwa-0.5.10; make; cd ../..; echo 

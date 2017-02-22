@@ -47,7 +47,7 @@ print ' Done.'
 
 # Create config file
 config = open('config.txt', "wt")
-config.write('ENSTDB = ' + scriptdir + '/exome_65_GRCh37.gz\n')
+config.write('ENSTDB = ' + scriptdir + '/ensembl75s.gz\n')
 config.write('CAVA_CONFIG = ' + scriptdir + '/cava_config.txt\n')
 
 # CoverView config files
@@ -56,10 +56,10 @@ call(['cp', 'templates/coverview_config_template', 'CoverView_full.json'])
 defaultconfig = open('CoverView_default.json', "a")
 defaultconfig.write('\t\"only_fail_profiles\": true,\n')
 defaultconfig.write('\t\"transcript\":  {\"regions\": false, \"profiles\": false, \"poor\": true },\n')
-defaultconfig.write('\t\"transcript_db\": \"' + scriptdir + '/exome_65_GRCh37.gz\"\n}\n')
+defaultconfig.write('\t\"transcript_db\": \"' + scriptdir + '/ensembl75s.gz\"\n}\n')
 fullconfig = open('CoverView_full.json', "a")
 fullconfig.write('\t\"transcript\":  {\"regions\": true, \"profiles\": true, \"poor\": true },\n')
-fullconfig.write('\t\"transcript_db\": \"' + scriptdir + '/exome_65_GRCh37.gz\"\n}\n')
+fullconfig.write('\t\"transcript_db\": \"' + scriptdir + '/ensembl75s.gz\"\n}\n')
 defaultconfig.close()
 fullconfig.close()
 
@@ -68,7 +68,7 @@ call(['cp', 'templates/cava_config_template', 'cava_config.txt'])
 cavaconfig = open('cava_config.txt', "a")
 cavaconfig.write('# Name of Ensembl transcript database file\n')
 cavaconfig.write('# Possible values: string | Optional: yes (if not given, no transcript-based annotations are reported)\n')
-cavaconfig.write('@ensembl = ' + scriptdir + '/exome_65_GRCh37.gz\n')
+cavaconfig.write('@ensembl = ' + scriptdir + '/ensembl75s.gz\n')
 if not options.reference is None:
     cavaconfig.write('\n# Name of reference genome file\n')
     cavaconfig.write('# Possible values: string | Optional: no\n')
