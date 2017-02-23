@@ -51,7 +51,7 @@ java -Xmx4g -jar $opexdir/tools/picard-tools-1.48/MarkDuplicates.jar I=@NAME.bam
 # Coverage checks
 message "Checking coverage"
 checkFiles @NAME_picard.bam
-python $opexdir/tools/CoverView-v1.1.0/CoverView.py -i @NAME_picard.bam -o @NAME_coverview @MORECV
+python $opexdir/tools/CoverView-v1.1.1/CoverView.py -i @NAME_picard.bam -o @NAME_coverview @MORECV
 
 # Platypus
 message "Variant calling"
