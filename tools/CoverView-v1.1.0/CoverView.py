@@ -6,7 +6,6 @@ import os
 import sys
 import datetime
 import numpy
-import math
 import multiprocessing
 import json
 import transcript
@@ -800,7 +799,7 @@ warnings.simplefilter("ignore", RuntimeWarning)
 
 print ""
 print "======================================================================================"
-print 'CoverView v1.1.0 started running: ', datetime.datetime.now()
+print 'CoverView v1.1.1 started running: ', datetime.datetime.now()
 print ""
 
 # Command line argument parsing
@@ -834,7 +833,7 @@ if options.bedfile is None:
     chromdata = calculateChromdata_minimal(samfile)
     output_summary_minimal(options, chromdata)
     print ""
-    print 'CoverView v1.1.0 succesfully finished: ', datetime.datetime.now()
+    print 'CoverView v1.1.1 succesfully finished: ', datetime.datetime.now()
     print "======================================================================================"
     print ""
     quit()
@@ -897,6 +896,6 @@ chromdata = calculateChromdata(samfile, ontarget)
 output_summary(options, chromdata)
 
 print ""
-print 'CoverView v1.1.0 succesfully finished: ', datetime.datetime.now()
+print 'CoverView v1.1.1 succesfully finished: ', datetime.datetime.now()
 print "======================================================================================"
 print ""
