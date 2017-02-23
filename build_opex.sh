@@ -51,7 +51,7 @@ message "Building and installing Platypus"
 cd tools/Platypus-0.1.5; python setup.py build; echo
 mkdir $opexdir/Platypus
 python setup.py install --prefix $opexdir/Platypus; cd ../..
-echo -e "import sys\nsys.path.insert(1, '"$opexdir"/Platypus/lib/python2.7/site-packages')" > usercustomize.py
+echo -e "import sys\nsys.path.insert(1, '"$opexdir"/Platypus/lib/python2.7/site-packages')\nsys.path.insert(1, '"$opexdir"/Platypus/lib64/python2.7/site-packages')" > usercustomize.py
 
 # Build Pysam 0.7.7
 message "Building Pysam"
