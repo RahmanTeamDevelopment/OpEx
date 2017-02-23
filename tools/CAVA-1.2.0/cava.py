@@ -19,11 +19,6 @@ if sys.version_info[0] == 3:
     quit()
 
 # Imports of CAVA code
-# Checking if installation is complete
-if not os.path.isfile(os.path.dirname(os.path.realpath(__file__))+"/pysamdir/pysam/Pileup.py"):
-    print '\nCAVA installation not complete.'
-    print 'Please run install.sh in the cava directory.\n'
-    quit()
 import core
 from core import Options
 from core import Record
