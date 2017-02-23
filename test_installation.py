@@ -91,6 +91,7 @@ for output, expected in outputs.iteritems():
 
 print '- Done.'
 print 'OpEx is correctly installed.'
+print '='*80+'\n'
 shutil.rmtree('_testinstall')
 
 
