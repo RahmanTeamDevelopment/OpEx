@@ -15,7 +15,7 @@ import sys
 scriptdir = os.path.dirname(os.path.realpath(__file__))
 
 # Version
-ver = '1.0.0'
+ver = '1.1.0'
 
 # Installation log file
 logfile = open('install_log.txt', 'w')

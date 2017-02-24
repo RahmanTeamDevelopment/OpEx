@@ -10,7 +10,7 @@ OpEx runs on Linux. It requires Python 2.7.3 or later (< Python 3) with Numpy ve
 
 OpEx can be downloaded from http://www.icr.ac.uk/opex.
 
-To install OpEx, unpack the tgz file and run the installation script (install.py) in the opex-v1.0.0 directory (see details below).
+To install OpEx, unpack the tgz file and run the installation script (install.py) in the opex-v1.1.0 directory (see details below).
 
 
 2.1 What will installation do?
@@ -28,7 +28,7 @@ The installation script will perform the following steps:
 
 In order to set up the pipeline correctly, we recommend running Full Installation. In Full Installation, the GRCh37 reference genome file has to be provided when running the installation script. The reference genome file will be automatically indexed by BWA and Stampy upon installation and therefore it can take a while (approx. 2-3 hours). There is also a Quick Installation option (Section 2.3).
 
-Go into the opex-v1.0.0 folder and run:
+Go into the opex-v1.1.0 folder and run:
 ./install.py -r /path/to/reference/human_g1k_v37.fasta
 
 where human_g1k_v37.fasta is the file of the GRCh37 reference genome sequence which (together with the corresponding .fai file) can be downloaded from the 1000G website: 
@@ -43,7 +43,7 @@ Note that OpEx expects the unzipped .fasta file, and the .fai file will also nee
 
 In Quick Installation one is not required to provide the reference genome, instead a path pointing to an existing genome installation can be set manually or the reference can be supplied upon the first run.
 
-Go into the opex-v1.0.0 folder and run:
+Go into the opex-v1.1.0 folder and run:
 ./install.py
 
 Once the installation script has finished, OpEx is ready for use. However, the GRCh37 reference genome must be set manually or supplied upon first run.
@@ -62,7 +62,7 @@ The test dataset consists of:
 
 The test dataset and the expected outputs are found in the test/ and test/output/ directories, respectively.
 
-To test the installation, go into the opex-v1.0.0 folder and run:
+To test the installation, go into the opex-v1.1.0 folder and run:
 ./test_installation.py
 
 Due to the small size of the test dataset, the test script typically finishes in less than a minute. 

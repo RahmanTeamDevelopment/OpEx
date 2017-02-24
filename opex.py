@@ -66,7 +66,7 @@ scriptdir = os.path.dirname(os.path.realpath(__file__))
 workingdir = os.getcwd()
 
 # Version
-ver = '1.0.0'
+ver = '1.1.0'
 
 # Command line argument parsing
 descr = 'OpEx (Optimised Exome) pipeline ' + ver + '.'
