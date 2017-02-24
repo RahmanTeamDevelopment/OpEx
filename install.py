@@ -39,13 +39,15 @@ print '-'*50+'\n'
 print '(More details in install_log.txt)\n'
 
 # Call build_opex.sh script
-sys.stdout.write('Downloading and building components (BWA, Stampy, CoverView, Platypus, CAVA) ...')
+sys.stdout.write('Downloading and building components  ... ')
 sys.stdout.flush()
 call(['chmod', '+x', './build_opex.sh'])
 call(['./build_opex.sh'], stdout = logfile, stderr = logfile)
-print ' Done.'
+print 'Done.'
 
 # Create config file
+sys.stdout.write('Creating configuration files         ... ')
+sys.stdout.flush()
 config = open('config.txt', "wt")
 config.write('ENSTDB = ' + scriptdir + '/ensembl75s.gz\n')
 config.write('CAVA_CONFIG = ' + scriptdir + '/cava_config.txt\n')
@@ -74,19 +76,20 @@ if not options.reference is None:
     cavaconfig.write('# Possible values: string | Optional: no\n')
     cavaconfig.write('@reference = ' + refdir + '\n')
 cavaconfig.close()
+print 'Done.'
 
 # Call index_genome.sh and add reference fields to config file
 if not options.reference is None:
-    sys.stdout.write('Adding default reference genome ...')
+    sys.stdout.write('Adding and indexing reference genome ... ')
     sys.stdout.flush()
     call(['chmod', '+x', './index_genome.sh'])
     call(['./index_genome.sh', refdir], stdout=logfile, stderr=logfile)
     config.write('REFERENCE = ' + refdir + '\n')
     config.write('GENOME_INDEX = ' + scriptdir + '/index/ref\n')
     config.write('HASH = ' + scriptdir + '/index/ref\n')
-    print ' Done.'
+    print 'Done.'
 else:
-    print '\n!!! Referemce genome must be added later.'
+    print '\nWarning: reference genome needs to be added later'
 
 # Close config file and print goodbye message
 config.close()
