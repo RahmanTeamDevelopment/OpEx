@@ -95,7 +95,7 @@ else:
 config.close()
 print '\n'+'-'*50
 print 'OPEX v' + ver + ' INSTALLATION COMPLETED'
-if not options.reference is None: print ' Test installation: python test_installation.py'
+if not options.reference is None: print 'Test installation: python test_installation.py'
 print '-'*50+'\n'
 
 # Close log file
