@@ -1,11 +1,8 @@
 #!/bin/bash
 
-# Print out message and write to log file
-message () {
-echo; printf '%.0s=' {1..80}; echo
-echo "OpEx: $1"
-printf '%.0s=' {1..80}; echo; echo
-echo "$(date "+%d.%m.%Y %T") : $1" >> @NAME_opex_log.txt
+# Print out message
+msg () {
+echo "OPEXMSG $1"
 }
 
 # Check if files exist and terminate OpEx if required
@@ -16,7 +13,6 @@ do
     then
 	echo "OpEx error: $file does not exist."
 	echo "Cannot proceed with this step. OpEx run terminated."
-	echo "$(date "+%d.%m.%Y %T") : $file does not exist, cannot proceed. OpEx run terminated" >> @NAME_opex_log.txt
 	exit
     fi
 done
@@ -25,48 +21,45 @@ done
 
 opexdir=@OPEXDIR
 
-echo "$(date "+%d.%m.%Y %T") : Pipeline started" >> @NAME_opex_log.txt
-
 # Mapping reads with BWA and Stampy, converting output to BAM file which is then sorted and indexed
-message "Mapping reads, converting output to BAM file, sorting and indexing BAM"
+msg "Stampy is mapping reads to reference genome"
 checkFiles @FASTQ1 @FASTQ2
 mkdir @NAME_tmp
 $opexdir/tools/stampy-1.0.14.1/stampy.py --bwa=$opexdir/tools/bwa-0.5.10/bwa --bwaoptions="-q 10 @REFERENCE" -g @STAMPY_INDEX -h @STAMPY_HASH --bwatmpdir=./@NAME_tmp -M @FASTQ1 @FASTQ2 | python $opexdir/tools/utils/toBAM.py | python $opexdir/tools/utils/sort.py @NAME; python $opexdir/tools/utils/index.py @NAME
 @KEEPREMOVE
 
 # Checking if number of reads is the same in the FASTQ files and in the BAM file
-message "Comparing number of reads in FASTQ and BAM files"
+msg "Comparing number of reads in FASTQ and BAM files"
 checkFiles @FASTQ1 @NAME.bam
 fastqr=$(echo $(zcat @FASTQ1 | wc -l)/2 | bc)
 bamr=$(python $opexdir/tools/utils/bamreads.py @NAME.bam)
 if [ $fastqr != $bamr ]; then echo FASTQ has $fastqr reads, BAM has $bamr reads; fi
 
 # Duplicate marking by Picard
-message "Duplicate marking"
+msg "Picard is marking duplicates"
 checkFiles @NAME.bam
 mkdir -p @NAME_tmp
 java -Xmx4g -jar $opexdir/tools/picard-tools-1.48/MarkDuplicates.jar I=@NAME.bam O=@NAME_picard.bam METRICS_FILE=@NAME_picard_metrics.txt CREATE_INDEX=true TMP_DIR=./@NAME_tmp
 @KEEPREMOVE
 
 # Coverage checks
-message "Checking coverage"
+msg "CoverView is checking coverage"
 checkFiles @NAME_picard.bam
 python $opexdir/tools/CoverView-v1.1.1/CoverView.py -i @NAME_picard.bam -o @NAME_coverview @MORECV
 
 # Platypus
-message "Variant calling"
+msg "Platypus is calling variants"
 checkFiles @NAME_picard.bam
 export PYTHONPATH="$PYTHONPATH:@OPEXDIR:@OPEXDIR/pysamdir"
 python $opexdir/tools/Platypus-0.1.5/Platypus.py callVariants --bamFiles=@NAME_picard.bam --refFile=@REFERENCE --output=@NAME_calls.vcf --logFileName=@NAME_platypus_log.txt
 
 # CAVA
-message "Variant annotation"
+msg "CAVA is annotating variants"
 checkFiles @NAME_calls.vcf
 python $opexdir/tools/CAVA-1.2.0/cava.py -i @NAME_calls.vcf -c @CAVA_CONFIG -o @NAME_annotated_calls @MORECAVA
 
 # Creating output txt file
-message "Creating output txt file"
+msg "Creating output txt file"
 checkFiles @NAME_annotated_calls.vcf
 python $opexdir/tools/utils/postCAVA.py @NAME_annotated_calls.vcf > @NAME_annotated_calls.txt
 
-echo "$(date "+%d.%m.%Y %T") : Pipeline finished" >> @NAME_opex_log.txt

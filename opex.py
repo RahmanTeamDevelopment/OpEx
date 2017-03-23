@@ -6,6 +6,7 @@ import stat
 from optparse import OptionParser
 from subprocess import call
 from collections import OrderedDict
+import datetime
 
 #########################################################################################################
 
@@ -54,6 +55,21 @@ def generateFile(params, fnin, fnout):
 def makeExecutable(fn):
     st = os.stat(fn)
     os.chmod(fn, st.st_mode | stat.S_IEXEC)
+
+# ...
+def executeScript(cmd_str):
+    cmd = cmd_str.split()
+    popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
+    for stdout_line in iter(popen.stdout.readline, ""): yield stdout_line.strip()
+    popen.stdout.close()
+    return_code = popen.wait()
+    if return_code: raise subprocess.CalledProcessError(return_code, cmd)
+
+# ...
+def report(info):
+    msg = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ': ' + info
+    print msg
+    sys.stdout.flush()
 
 ##############################################################################################################
 
@@ -107,6 +123,16 @@ print 'Bash script has been successfully generated: ' + scriptfn
 # Run Bash script 
 print '\nRunning the ' + scriptfn + ' script ... '
 call(['./' + scriptfn])
+
+# ...
+logf = open(options.name + '_opex_log.txt', 'w')
+for stdout_line in executeScript('./'+scriptfn):
+    if stdout_line.startswith('OPEXMSG'):
+        print datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ': ' + stdout_line[8:]; sys.stdout.flush()
+        logf.write('\n'+'='*80+'\n'+stdout_line[8:]+'\n'+'='*80+'\n\n'); logf.flush()
+    else:
+        logf.write(stdout_line + '\n'); logf.flush()
+logf.close()
 
 # Goodbye message
 print '\n' + '-' * 80
