@@ -31,7 +31,7 @@ echo "$(date "+%d.%m.%Y %T") : Pipeline started" >> @NAME_opex_log.txt
 message "Mapping reads, converting output to BAM file, sorting and indexing BAM"
 checkFiles @FASTQ1 @FASTQ2
 mkdir @NAME_tmp
-$opexdir/tools/stampy-1.0.14.1/stampy.py --bwa=$opexdir/tools/bwa-0.5.10/bwa --bwaoptions="-q 10 @REFERENCE" -g @GENOME_INDEX -h @HASH --bwatmpdir=./@NAME_tmp -M @FASTQ1 @FASTQ2 | python $opexdir/tools/utils/toBAM.py | python $opexdir/tools/utils/sort.py @NAME; python $opexdir/tools/utils/index.py @NAME
+$opexdir/tools/stampy-1.0.14.1/stampy.py --bwa=$opexdir/tools/bwa-0.5.10/bwa --bwaoptions="-q 10 @REFERENCE" -g @STAMPY_INDEX -h @STAMPY_HASH --bwatmpdir=./@NAME_tmp -M @FASTQ1 @FASTQ2 | python $opexdir/tools/utils/toBAM.py | python $opexdir/tools/utils/sort.py @NAME; python $opexdir/tools/utils/index.py @NAME
 @KEEPREMOVE
 
 # Checking if number of reads is the same in the FASTQ files and in the BAM file

@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 
-"""
-Last updated: 15.06.2016
-"""
 
 from subprocess import call
 import os
