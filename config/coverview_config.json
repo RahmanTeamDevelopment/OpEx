@@ -3,7 +3,6 @@
 	"outputs": { "regions": true, "profiles": true },
 	"low_bq": 10,
 	"low_mq": 20,
-	"fail": { "MIN_MINQCOV": 50, "MAX_MAXFLMQ": 0.05, "MAX_MAXFLBQ": 0.15 },
+	"fail": { "MIN_MINQCOV": 15 },
 	"only_fail_profiles": true,
 	"transcript": {"region": false, "profiles": false, "poor": true},
-

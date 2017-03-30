@@ -65,7 +65,7 @@ cava_config.write('@reference = ' + refpath + '\n')
 cava_config.close()
 
 # CoverView config file
-coverview_config = open('config/coverview_config.txt', "a")
+coverview_config = open('config/coverview_config.json', "a")
 coverview_config.write('\t\"transcript_db\": \"' + scriptdir + '/defaultdb/ensembl75s.gz\"\n}\n')
 coverview_config.close()
 
