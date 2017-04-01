@@ -4,7 +4,7 @@ import os
 import sys
 import stat
 from optparse import OptionParser
-from subprocess import call
+import subprocess
 from collections import OrderedDict
 import datetime
 
@@ -118,11 +118,6 @@ else: params['KEEPREMOVE'] = 'rm -r ' + params['NAME'] + '_tmp'
 scriptfn = params['NAME'] + '_opex_pipeline.sh'
 generateFile(params, scriptdir + '/templates/opex_pipeline_template', scriptfn)
 makeExecutable(scriptfn)
-print 'Bash script has been successfully generated: ' + scriptfn
-
-# Run Bash script 
-print '\nRunning the ' + scriptfn + ' script ... '
-call(['./' + scriptfn])
 
 # ...
 logf = open(options.name + '_opex_log.txt', 'w')
