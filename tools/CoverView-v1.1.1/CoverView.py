@@ -198,7 +198,7 @@ class SingleJob(multiprocessing.Process):
 
         if self.threadidx == 1:
             print ''
-            sys.stdout.write('\rRunning analysis ... 0.0%')
+            sys.stdout.write('Running analysis ... 0.0%')
             sys.stdout.flush()
 
         numOfFails = 0
@@ -797,7 +797,6 @@ def output_summary_minimal(options, chromdata):
 numpy.seterr(all='ignore')
 warnings.simplefilter("ignore", RuntimeWarning)
 
-print ""
 print "======================================================================================"
 print 'CoverView v1.1.1 started running: ', datetime.datetime.now()
 print ""
@@ -898,4 +897,4 @@ output_summary(options, chromdata)
 print ""
 print 'CoverView v1.1.1 succesfully finished: ', datetime.datetime.now()
 print "======================================================================================"
-print ""
+

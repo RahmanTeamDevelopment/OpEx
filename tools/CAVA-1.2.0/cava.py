@@ -36,7 +36,7 @@ import pysam
 # Printing out welcome meassage
 def printStartInfo(ver):
     starttime = datetime.datetime.now()
-    print "\n-----------------------------------------------------------------------"
+    print "-----------------------------------------------------------------------"
     print 'CAVA (Clinical Annotation of VAriants) ' + ver + ' is now running.'
     print 'Started: ', str(starttime), '\n'
     return starttime

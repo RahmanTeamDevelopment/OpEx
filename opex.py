@@ -40,7 +40,7 @@ def checkInputs(options):
     x = options.fastq.split(',')
     if not len(x) == 2: sys.exit('\nIncorrect format for option --input.\n')
     if not x[0].endswith('.fastq.gz') or not x[1].endswith('.fastq.gz'): sys.exit('\nInput files must have .fastq.gz format.\n')
-    if options.name is None: sys.exit('\nOutput file name not specified.\n')
+    if options.name is None: sys.exit('\nOutput files prefix not specified.\n')
 
 # ...
 def generateFile(params, fnin, fnout):
@@ -91,10 +91,19 @@ parser.add_option('-k', "--keep", default=False, dest='keep', action='store_true
 (options, args) = parser.parse_args()
 checkInputs(options)
 
-# Welcome message
-print '\n' + '-' * 80
-print 'OpEx pipeline version ' + ver
-print '-' * 80 + '\n'
+print '\n= OpEx '+ver+' '+'='*100
+
+starttime = datetime.datetime.now()
+
+# Printing out run information
+print '\nAbout this run:\n'+'-'*16
+print 'Input fastq.gz files: ' + options.fastq
+if not options.bed is None: print 'Bed file: ' + options.bed
+if not options.config is None: print 'Configuration file: ' + options.config
+print 'Output files prefix: ' + options.name
+if int(options.threads) > 1: print 'Number of threads: ' + str(options.threads)
+print '-'*100 + '\n'
+print '[More information in '+options.name + '_opex_log.txt]\n'
 
 # Read configuration file
 params = readConfigFile(scriptdir, options.config)
@@ -119,17 +128,30 @@ scriptfn = params['NAME'] + '_opex_pipeline.sh'
 generateFile(params, scriptdir + '/templates/opex_pipeline_template', scriptfn)
 makeExecutable(scriptfn)
 
-# ...
+print datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ': OpEx pipeline started'; sys.stdout.flush()
+
+# Running Bash script and capturing stdout
 logf = open(options.name + '_opex_log.txt', 'w')
 for stdout_line in executeScript('./'+scriptfn):
     if stdout_line.startswith('OPEXMSG'):
         print datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ': ' + stdout_line[8:]; sys.stdout.flush()
-        logf.write('\n'+'='*80+'\n'+stdout_line[8:]+'\n'+'='*80+'\n\n'); logf.flush()
+        logf.write('\n\n'+'='*120+'\nOPEX: '+stdout_line[8:]+'\n'+'='*120+'\n\n'); logf.flush()
     else:
         logf.write(stdout_line + '\n'); logf.flush()
 logf.close()
 
-# Goodbye message
-print '\n' + '-' * 80
-print 'OpEx pipeline finished.'
-print '-' * 80 + '\n'
+print datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ': OpEx pipeline finished'; sys.stdout.flush()
+
+# ...
+endtime = datetime.datetime.now()
+runtime = str(endtime-starttime)[:-4]
+if os.path.isfile(options.name + '_annotated_calls.txt') and os.path.getsize(options.name + '_annotated_calls.txt') > 0:
+    print '\nAnalysis of sample has been successful. Total runtime: ' + runtime
+else:
+    print '\nAnalysis of sample has failed. Total runtime: ' + runtime
+
+print '\n'+'='*len('= OpEx '+ver+' '+'='*100)+'\n'
+
+
+
+
