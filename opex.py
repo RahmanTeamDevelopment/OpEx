@@ -36,13 +36,41 @@ def readConfigFile(scriptdir, fn):
 
     return ret
 
-# Check correctness of input file names
-def checkInputs(options):
+# Check command line options
+def checkOptions(options):
+
+    # Input fastq files
     if options.fastq is None: sys.exit('\nInput files not specified.\n')
     x = options.fastq.split(',')
     if not len(x) == 2: sys.exit('\nIncorrect format for option --input.\n')
     if not x[0].endswith('.fastq.gz') or not x[1].endswith('.fastq.gz'): sys.exit('\nInput files must have .fastq.gz format.\n')
+    if os.path.isfile(x[0]): x[0] = os.path.abspath(x[0])
+    else: sys.exit('Input file  %s does not exist.' % x[0])
+    if os.path.isfile(x[1]): x[1] = os.path.abspath(x[1])
+    else: sys.exit('Input file  %s does not exist.' % x[1])
+    options.fastq = x[0]+','+x[1]
+
+    # Output files prefix
     if options.name is None: sys.exit('\nOutput files prefix not specified.\n')
+
+    # Bed file
+    if options.bed is not None:
+        if os.path.isfile(options.bed): options.bed = os.path.abspath(options.bed)
+        else: sys.exit('Bed file %s does not exist.' % options.bed)
+
+    # Config file
+    if options.config is not None:
+        if os.path.isfile(options.config): options.config = os.path.abspath(options.config)
+        else: sys.exit('Configuration file %s does not exist.' % options.config)
+
+    # Threads
+    try:
+        ti = int(options.threads)
+        if not ti > 0: raise
+    except:
+        sys.exit('Value of option --threads should be positive integer')
+
+    return options
 
 # Generate script based on template
 def generateFile(params, fnin, fnout):
@@ -92,7 +120,7 @@ parser.add_option('-t', "--threads", default=1, dest='threads', action='store', 
 parser.add_option('-c', "--config", default=None, dest='config', action='store', help="Configuration file")
 parser.add_option('-k', "--keep", default=False, dest='keep', action='store_true', help="Keep temporary files")
 (options, args) = parser.parse_args()
-checkInputs(options)
+options = checkOptions(options)
 
 # Start date and time
 starttime = datetime.datetime.now()
