@@ -8,11 +8,13 @@ import subprocess
 from collections import OrderedDict
 import datetime
 
-#########################################################################################################
+#################################################################################################################
 
-# ...
+# Read configuration file
 def readConfigFile(scriptdir, fn):
     ret = OrderedDict()
+
+    # Read all options from file
     if fn is None: fn = scriptdir + '/config.txt'
     for line in open(fn):
         line = line.strip()
@@ -27,14 +29,14 @@ def readConfigFile(scriptdir, fn):
     for k in ['REFERENCE', 'STAMPY_INDEX', 'STAMPY_HASH', 'CAVA_CONFIG', 'COVERVIEW_CONFIG']:
         if k not in ret: sys.exit('Required option %s not specified in configuration file' % k)
 
-    # Check if file exists and convert to absolute path
+    # Check if files exist and convert to absolute path
     for k in ['REFERENCE', 'CAVA_CONFIG', 'COVERVIEW_CONFIG']:
         if os.path.isfile(ret[k]): ret[k] = os.path.abspath(ret[k])
         else: sys.exit('File specified by option %s (%s) does not exist.' % (k, ret[k]))
 
     return ret
 
-# ...
+# Check correctness of input file names
 def checkInputs(options):
     if options.fastq is None: sys.exit('\nInput files not specified.\n')
     x = options.fastq.split(',')
@@ -42,7 +44,7 @@ def checkInputs(options):
     if not x[0].endswith('.fastq.gz') or not x[1].endswith('.fastq.gz'): sys.exit('\nInput files must have .fastq.gz format.\n')
     if options.name is None: sys.exit('\nOutput files prefix not specified.\n')
 
-# ...
+# Generate script based on template
 def generateFile(params, fnin, fnout):
     with open(fnout, "wt") as fout:
         with open(fnin, "rt") as fin:
@@ -56,7 +58,7 @@ def makeExecutable(fn):
     st = os.stat(fn)
     os.chmod(fn, st.st_mode | stat.S_IEXEC)
 
-# ...
+# Execute script
 def executeScript(cmd_str):
     cmd = cmd_str.split()
     popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
@@ -65,14 +67,15 @@ def executeScript(cmd_str):
     return_code = popen.wait()
     if return_code: raise subprocess.CalledProcessError(return_code, cmd)
 
-# ...
+# Write status message to stdout
 def report(info):
     msg = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ': ' + info
     print msg
     sys.stdout.flush()
 
-##############################################################################################################
+#################################################################################################################
 
+# OpEx dir and working dir
 scriptdir = os.path.dirname(os.path.realpath(__file__))
 workingdir = os.getcwd()
 
@@ -91,11 +94,11 @@ parser.add_option('-k', "--keep", default=False, dest='keep', action='store_true
 (options, args) = parser.parse_args()
 checkInputs(options)
 
-print '\n= OpEx '+ver+' '+'='*100
-
+# Start date and time
 starttime = datetime.datetime.now()
 
 # Printing out run information
+print '\n= OpEx '+ver+' '+'='*100
 print '\nAbout this run:\n'+'-'*16
 print 'Input fastq.gz files: ' + options.fastq
 if not options.bed is None: print 'Bed file: ' + options.bed
@@ -112,14 +115,11 @@ params = readConfigFile(scriptdir, options.config)
 params['NAME'] = options.name
 params['FASTQ1'], params['FASTQ2'] = options.fastq.split(',')
 params['OPEXDIR'] = scriptdir
-
 params['MORECV'] = '-c ' + params['COVERVIEW_CONFIG']
 if options.bed is not None: params['MORECV'] = params['MORECV'] + ' -b ' + options.bed
 if int(options.threads) > 1: params['MORECV'] = params['MORECV'] + ' -t ' + str(options.threads)
-
 params['MORECAVA'] = ''
 if int(options.threads) > 1: params['MORECAVA'] = params['MORECAVA'] + '-t ' + str(options.threads)
-
 if options.keep: params['KEEPREMOVE'] = ''
 else: params['KEEPREMOVE'] = 'rm -r ' + params['NAME'] + '_tmp'
 
@@ -128,9 +128,8 @@ scriptfn = params['NAME'] + '_opex_pipeline.sh'
 generateFile(params, scriptdir + '/templates/opex_pipeline_template', scriptfn)
 makeExecutable(scriptfn)
 
-print datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ': OpEx pipeline started'; sys.stdout.flush()
-
 # Running Bash script and capturing stdout
+print datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ': OpEx pipeline started'; sys.stdout.flush()
 logf = open(options.name + '_opex_log.txt', 'w')
 for stdout_line in executeScript('./'+scriptfn):
     if stdout_line.startswith('OPEXMSG'):
@@ -140,18 +139,11 @@ for stdout_line in executeScript('./'+scriptfn):
         logf.write(stdout_line + '\n'); logf.flush()
 logf.close()
 
+# Conclusion and runtime
 print datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ': OpEx pipeline finished'; sys.stdout.flush()
-
-# ...
-endtime = datetime.datetime.now()
-runtime = str(endtime-starttime)[:-4]
+runtime = str(datetime.datetime.now()-starttime)[:-4]
 if os.path.isfile(options.name + '_annotated_calls.txt') and os.path.getsize(options.name + '_annotated_calls.txt') > 0:
     print '\nAnalysis of sample has been successful. Total runtime: ' + runtime
 else:
     print '\nAnalysis of sample has failed. Total runtime: ' + runtime
-
 print '\n'+'='*len('= OpEx '+ver+' '+'='*100)+'\n'
-
-
-
-
